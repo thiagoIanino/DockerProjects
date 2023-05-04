@@ -11,6 +11,20 @@ const config = {
 const mysql = require('mysql');
 app.use(express.json());
 
+app.get('/', (req, res) => {
+    const connection = mysql.createConnection(config);
+    connection.query('SELECT name FROM people', (error, results, fields) => {
+        if (error) {
+            res.status(500).send('Erro ao consultar banco de dados');
+        } else {    
+            const html = `<h1>Full cycle rocks</h1> <ul>${results?.map(e => `<li>${e.name}</li>`)}</ul>`
+            res.send(html);
+        }
+    });
+
+    connection.end()
+})
+
 app.post('/', (req, res) => {
 
     const { name } = req.body;
